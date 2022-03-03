@@ -35,7 +35,9 @@ This project provides a local docker container containing all useful tools neede
 ## Getting Started
 
 * Create a .env file with your configuration.
-* type `./clustercontrol.sh` to lauch the main menu.
+* type `./clustercontrol.sh` to lauch the main menu. 
+
+Please note: This may take some time on the initial run for docker to build everything up.
  
 ## Configuration
 
