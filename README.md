@@ -26,12 +26,24 @@ This project provides a local docker container containing all useful tools neede
 - fluxctl
 - wireguard
 
-
-
+## Requirements
+- Windows HOST OS (Not tested on any native linux machine. TODO!)
+- WSL2
 
 ## Configuration
 
-Please create a .env file with your settings based on sample.env.
+First, you need to create a project and a hcloud token in the hetzner cloud web console.
+
+Please create a .env file with your settings:
+```
+HCLOUD_TOKEN=<your hcloud key>
+CONTROLPLANE_SERVER_TYPE=cx21
+AGENT_SERVER_TYPE=cx21
+AGENT_COUNT=2
+WIREGUARD_CLIENT_COUNT=5
+LETS_ENCRYPT_ISSUER_EMAIL=admin@mysite.com
+GITHUB_TOKEN=<your github PAT token>
+```
 
 
 
