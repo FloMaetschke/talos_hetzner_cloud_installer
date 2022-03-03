@@ -1,0 +1,42 @@
+version: "3"
+services:
+    clustercontrol-talos:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            network: host
+        container_name: clustercontrol-talos
+        image: clustercontrol-talos:latest
+        volumes:
+           - ./:/kubernetes
+           - ./root/.ansible/:/root/.ansible/
+           - ./root/.terraform/:/root/.terraform/
+           - ./root/.kube/:/root/.kube/
+        ports:
+           - 9000:9000
+
+
+        #  - ./keys:/kubernetes/keys
+        #  - ./terraform/.terraform:/kubernetes/terraform/.terraform
+
+        environment:
+            - KUBECONFIG=/kubernetes/settings/kubeconfig
+            - TALOSCONFIG=/kubernetes/settings/talosconfig
+            - KUBE_EDITOR=nano -l
+            - TALOS_EDITOR=nano -l
+            - HCLOUD_TOKEN=${HCLOUD_TOKEN}
+            - TF_VAR_hcloud_token=${HCLOUD_TOKEN}
+            - WIREGUARD_CLIENT_COUNT=${WIREGUARD_CLIENT_COUNT}
+            - LETS_ENCRYPT_ISSUER_EMAIL=${LETS_ENCRYPT_ISSUER_EMAIL}
+            - GITHUB_TOKEN=${GITHUB_TOKEN}
+            - TF_VAR_controlplane_server_type=${CONTROLPLANE_SERVER_TYPE}
+            - TF_VAR_agent_server_type=${AGENT_SERVER_TYPE}
+            - TF_VAR_agent_count=${AGENT_COUNT}
+
+        cap_add:
+            - NET_ADMIN
+            - SYS_MODULE
+
+        command: bash setup.sh
+        stdin_open: true # docker run -i
+        tty: true        # docker run -t

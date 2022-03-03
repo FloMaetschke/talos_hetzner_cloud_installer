@@ -1,0 +1,9 @@
+- op: add
+  path: "/machine/network/interfaces"
+  value:
+    - interface: eth0
+      mtu: 0
+      dhcp: true
+    - interface: eth1
+      mtu: 0
+      dhcp: true

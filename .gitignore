@@ -1,0 +1,4 @@
+root/
+terraform/wireguard
+settings/
+.env
