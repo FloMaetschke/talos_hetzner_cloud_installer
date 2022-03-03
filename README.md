@@ -11,7 +11,7 @@ This project is intended to offer an easy way to host a production ready k8s tal
 
 
 ## How it works:
-This project provides a local docker container containing all useful tools needed for the bootstrap and to administrate a talkos k8s cluster from a windows os. It also features a wireguard-connection inside the container after the cluster was bootstrapped.
+This project provides a local docker container containing all useful tools needed for the bootstrap and to administrate a talos k8s cluster from a windows os. It also features a wireguard-connection inside the container after the cluster was bootstrapped.
 
 ### Tools:
 - terraform
