@@ -4,3 +4,4 @@ settings/
 keys/
 .env
 terraform/.terraform.lock.hcl
+terraform/controlplane_patch.yaml
