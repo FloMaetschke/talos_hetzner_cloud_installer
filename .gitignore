@@ -1,4 +1,5 @@
 root/
 terraform/wireguard
 settings/
+keys/
 .env
