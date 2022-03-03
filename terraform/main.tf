@@ -85,4 +85,8 @@ resource "hcloud_network_subnet" "talos" {
   type         = "cloud"
   network_zone = "eu-central"
   ip_range     = "10.29.0.0/24"
+
+  depends_on = [
+    hcloud_network.talos
+  ]
 }

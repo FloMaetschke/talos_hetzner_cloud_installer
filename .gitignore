@@ -4,4 +4,6 @@ settings/
 keys/
 .env
 terraform/.terraform.lock.hcl
+terraform/cluster_patch.yaml
 terraform/controlplane_patch.yaml
+terraform/cilium.yaml

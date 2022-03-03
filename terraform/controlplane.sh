@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "Updating $WIREGUARD_CLIENT_COUNT wireguard client configs with server ip ..."
 for ((i = 1; i <= $WIREGUARD_CLIENT_COUNT; i++)); do
     sed -i "s/SERVER_IP_ADDRESS/${1/$'\r'/}/g" "wireguard/client${i}.conf"
