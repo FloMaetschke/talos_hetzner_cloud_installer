@@ -9,23 +9,28 @@ cat <<EOL >cluster_patch.yaml
   path: /cluster/externalCloudProvider
   value:
     enabled: true
-- op: add
-  path: "/cluster/inlineManifests"
-  value:   
-    - name: cilium
-      contents: |-
-        $(cat cilium.yaml)
 EOL
 
 cat <<EOL >controlplane_patch.yaml
 - op: add
+  path: /cluster/network/cni
+  value:
+    name: none
+# DISABLE KUBEPROXY, USE CILIUM IN STRICT MODE!
+- op: add
+  path: /cluster/proxy
+  value:
+    disabled: true 
+- op: add
   path: "/cluster/extraManifests"
   value:
     - https://raw.githubusercontent.com/hetznercloud/csi-driver/v1.6.0/deploy/kubernetes/hcloud-csi.yml
-
 - op: add
   path: "/cluster/inlineManifests"
   value:
+    - name: cilium
+      contents: |-
+$(cat cilium.yaml)
     - name: hcloud-csi-secret
       contents: |-
         ---

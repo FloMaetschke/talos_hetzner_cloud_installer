@@ -11,3 +11,5 @@ helm template cilium cilium/cilium \
     --set kubeProxyReplacement=strict \
     --set k8sServiceHost="${KUBERNETES_API_SERVER_ADDRESS}" \
     --set k8sServicePort="${KUBERNETES_API_SERVER_PORT}" >cilium.yaml
+
+sed -i -e 's/^/        /' cilium.yaml # adds spaces
