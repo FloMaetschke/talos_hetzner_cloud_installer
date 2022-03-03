@@ -1,5 +1,7 @@
 #!/bin/bash
 
+VERSION=$(cat VERSION)
+
 # while-menu-dialog: a menu driven system information program
 
 DIALOG_CANCEL=1
@@ -33,7 +35,7 @@ while true; do
     exec 3>&1
     selection=$(
         dialog \
-            --backtitle $"Clustercontrol v0.1.3      Talos Release: ${TALOS_DISK_IMAGE:30:7} (IMG_ID:${TALOS_DISK_IMAGE:39:9})   Wireguard: ${WG_IP:9:14}${WG_DISCONNECTED}" \
+            --backtitle $"Clustercontrol ${VERSION}      Talos Release: ${TALOS_DISK_IMAGE:30:7} (IMG_ID:${TALOS_DISK_IMAGE:39:9})   Wireguard: ${WG_IP:9:14}${WG_DISCONNECTED}" \
             --title "Menu" \
             --clear \
             --no-lines \
@@ -66,6 +68,7 @@ while true; do
         ;;
     2)
         cd /kubernetes/terraform
+        terraform init
         terraform apply -auto-approve
         bash post-setup.sh
         result="Cluster successfully deployed!"
