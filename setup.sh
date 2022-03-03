@@ -93,8 +93,11 @@ while true; do
             echo Talos image found!
         fi
         cd /kubernetes/terraform
+        mkdir -p wireguard
         if terraform init && terraform apply -auto-approve; then
             bash post-setup.sh
+            WG_IP=$(ip address | grep "global client1")
+            WG_DISCONNECTED=""
             result="Cluster successfully deployed!"
             display_result "Cluster Deployment"
         else

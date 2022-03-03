@@ -2,6 +2,8 @@
 # Talos Production Cluster Bootstrap for Hetzner
 This project is intended to offer an easy way to host a production ready k8s talos cluster on Hetzner Cloud.
 
+![Main Menu Example](docs/mainmenu.png "Main Menu")
+
 - Easy going by just running a single command:
   `./clustercontrol.sh`
 - The cluster is secured by 2 firewalls, only allowing wireguard as access endpoint, so no administration api endpoint is reachable from the public.
@@ -9,7 +11,7 @@ This project is intended to offer an easy way to host a production ready k8s tal
 
 
 ## How it works:
-This project provides a local docker container containing all useful tools needed for the bootstrap and to administrate the cluster. It also features a wireguard-connection inside the container after the cluster was bootstrapped.
+This project provides a local docker container containing all useful tools needed for the bootstrap and to administrate a talkos k8s cluster from a windows os. It also features a wireguard-connection inside the container after the cluster was bootstrapped.
 
 ### Tools:
 - terraform
@@ -30,6 +32,11 @@ This project provides a local docker container containing all useful tools neede
 - Windows HOST OS (Not tested on any native linux machine. TODO!)
 - WSL2
 
+## Getting Started
+
+* Create a .env file with your configuration.
+* type `./clustercontrol.sh` to lauch the main menu.
+ 
 ## Configuration
 
 First, you need to create a project and a hcloud token in the hetzner cloud web console.
