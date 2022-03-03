@@ -29,6 +29,25 @@ display_result() {
         --msgbox "$result" 0 0
 }
 
+set_error() {
+    echo "Something went wrong!"
+    read -p "Press enter to continue"
+}
+
+create_talos_image() {
+    cd /kubernetes/packer
+    if packer init . && packer build .; then
+        bash post-setup.sh
+        result="Image Successfully created!"
+        display_result "Talos Image Creation"
+    else
+        set_error
+        result="Image could not be created!"
+        display_result "Talos Image Creation"
+    fi
+    cd /kubernetes/
+}
+
 #inet 10.20.0.101/32 scope global client1
 
 while true; do
@@ -67,24 +86,37 @@ while true; do
         bash
         ;;
     2)
+        if [ "$(hcloud image list | grep 'talos system disk' | wc -l)" -eq "0" ]; then
+            echo No talos image found. Creating ...
+            create_talos_image
+        else
+            echo Talos image found!
+        fi
         cd /kubernetes/terraform
-        terraform init
-        terraform apply -auto-approve
-        bash post-setup.sh
-        result="Cluster successfully deployed!"
-        display_result "Cluster Deployment"
+        if terraform init && terraform apply -auto-approve; then
+            bash post-setup.sh
+            result="Cluster successfully deployed!"
+            display_result "Cluster Deployment"
+        else
+            set_error
+            result="Cluster deployment unsuccessful!"
+            display_result "Cluster Deployment"
+        fi
         ;;
     3)
         cd /kubernetes/terraform
-        terraform destroy -auto-approve
-        result="Cluster successfully destroyed!"
-        display_result "Cluster Status"
+        if terraform destroy -auto-approve; then
+            result="Cluster successfully destroyed!"
+            display_result "Cluster Status"
+        else
+            set_error
+            result="Cluster could not successfully be destroyed!"
+            display_result "Cluster Status"
+        fi
         ;;
     4)
         clear
-        cd /kubernetes/packer
-        packer init .
-        packer build .
+        create_talos_image
         ;;
 
     esac

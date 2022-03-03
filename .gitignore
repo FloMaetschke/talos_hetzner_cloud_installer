@@ -3,3 +3,4 @@ terraform/wireguard
 settings/
 keys/
 .env
+terraform/.terraform.lock.hcl
