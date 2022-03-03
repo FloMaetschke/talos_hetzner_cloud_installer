@@ -44,7 +44,7 @@ RUN curl -Lo /usr/local/bin/talosctl https://github.com/talos-systems/talos/rele
 RUN chmod +x /usr/local/bin/talosctl
 RUN curl -Lo /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
 RUN chmod a+x /usr/local/bin/yq
-RUN curl -L https://github.com/hetznercloud/cli/releases/download/v1.29.0/hcloud-linux-amd64.tar.gz | tar xvz -C /usr/local/bin/ hcloud
+RUN curl -L https://github.com/hetznercloud/cli/releases/latest/download/hcloud-linux-amd64.tar.gz | tar xvz -C /usr/local/bin/ hcloud
 RUN chmod a+x /usr/local/bin/hcloud
 RUN apt-get update && apt-get install -y terraform ansible kubectl helm nano mc packer iputils-ping dialog tektoncd-cli
 RUN git clone https://github.com/ahmetb/kubectx /opt/kubectx
@@ -56,7 +56,7 @@ RUN curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/
 RUN mv kustomize /bin/
 RUN curl https://raw.githubusercontent.com/scopatz/nanorc/master/install.sh | sh
 RUN curl -s https://fluxcd.io/install.sh | bash 
-RUN curl -Lo /usr/local/bin/fluxctl https://github.com/fluxcd/flux/releases/download/1.24.3/fluxctl_linux_amd64
+RUN curl -Lo /usr/local/bin/fluxctl https://github.com/fluxcd/flux/releases/latest/download/fluxctl_linux_amd64
 RUN chmod a+x /usr/local/bin/fluxctl
 RUN curl -L https://github.com/fluxcd/webui/releases/download/v0.1.1/flux-webui_0.1.1_linux_amd64.tar.gz | tar xvz -C /usr/local/bin/ flux-webui
 RUN chmod a+x /usr/local/bin/flux-webui
