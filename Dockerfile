@@ -9,7 +9,7 @@ RUN apt-get install -y gnupg software-properties-common curl apt-transport-https
 FROM deps AS wireguardkernel
 RUN mkdir /workspace && \
     cd workspace && \
-    git clone --branch linux-msft-wsl-4.19.y --depth 1 https://github.com/microsoft/WSL2-Linux-Kernel.git && \
+    git clone --branch linux-msft-wsl-5.10.16.3 --depth 1 https://github.com/microsoft/WSL2-Linux-Kernel.git && \
     git clone --depth 1 https://git.zx2c4.com/wireguard-linux-compat && \
     git clone --depth 1 https://git.zx2c4.com/wireguard-tools
 
@@ -18,17 +18,18 @@ RUN apt-get -y install libelf-dev build-essential pkg-config && \
 
 RUN cd /workspace/WSL2-Linux-Kernel && \
     zcat /proc/config.gz > .config && \
-    make -j $(nproc) && \
+    yes n | make -j $(nproc) && \
     make -j $(nproc) modules_install && \
     cd /lib/modules && \
     ln -s $(uname -r)+/ $(uname -r)
 
-RUN cd /workspace && \
-    make -C wireguard-linux-compat/src -j$(nproc) && \
-    make -C wireguard-linux-compat/src install && \
-    make -C wireguard-tools/src -j$(nproc) && \
-    make -C wireguard-tools/src install && \
-    ls /lib/modules/$(uname -r)/extra/
+## WIREGUARD IS MERGED INTO KERNEL 5.6
+# RUN cd /workspace && \
+#     make -C wireguard-linux-compat/src -j$(nproc) && \
+#     make -C wireguard-linux-compat/src install && \
+#     make -C wireguard-tools/src -j$(nproc) && \
+#     make -C wireguard-tools/src install && \
+#     ls /lib/modules/$(uname -r)/extra/
 
 FROM wireguardkernel AS clustertools
 RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
@@ -60,14 +61,16 @@ RUN curl -Lo /usr/local/bin/fluxctl https://github.com/fluxcd/flux/releases/late
 RUN chmod a+x /usr/local/bin/fluxctl
 RUN curl -L https://github.com/fluxcd/webui/releases/download/v0.1.1/flux-webui_0.1.1_linux_amd64.tar.gz | tar xvz -C /usr/local/bin/ flux-webui
 RUN chmod a+x /usr/local/bin/flux-webui
-
+RUN curl -L https://github.com/derailed/k9s/releases/download/v0.26.3/k9s_Linux_x86_64.tar.gz | tar xvz -C /usr/local/bin/ k9s
+RUN chmod a+x /usr/local/bin/k9s
 
 RUN echo "alias k=kubectl" >> /root/.bashrc
 RUN echo "alias tf=terraform" >> /root/.bashrc
 RUN echo "eval \"\$(ssh-agent)\"" >> /root/.bashrc
+
 RUN echo "chmod 600 /kubernetes/keys/*" >> /root/.bashrc
-RUN echo "ssh-add /kubernetes/keys/cluster.key" >> /root/.bashrc
+RUN echo "ssh-add /kubernetes/keys/cluster" >> /root/.bashrc
 RUN echo ". <(flux completion bash)" >> /root/.bashrc
 FROM clustertools
 ENV ANSIBLE_CONFIG=/kubernetes/ansible/ansible.cfg
-#COPY . .
+COPY . .
