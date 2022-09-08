@@ -9,7 +9,7 @@ RUN apt-get install -y gnupg software-properties-common curl apt-transport-https
 FROM deps AS wireguardkernel
 RUN mkdir /workspace && \
     cd workspace && \
-    git clone --branch linux-msft-wsl-5.10.16.3 --depth 1 https://github.com/microsoft/WSL2-Linux-Kernel.git && \
+    git clone --branch $(echo linux-msft-$(uname -r | cut -d'-' -f1) | sed "s/linux-msft-5\./linux-msft-wsl-5./") --depth 1 https://github.com/microsoft/WSL2-Linux-Kernel.git && \
     git clone --depth 1 https://git.zx2c4.com/wireguard-linux-compat && \
     git clone --depth 1 https://git.zx2c4.com/wireguard-tools
 
@@ -23,13 +23,14 @@ RUN cd /workspace/WSL2-Linux-Kernel && \
     cd /lib/modules && \
     ln -s $(uname -r)+/ $(uname -r)
 
-## WIREGUARD IS MERGED INTO KERNEL 5.6
-# RUN cd /workspace && \
-#     make -C wireguard-linux-compat/src -j$(nproc) && \
-#     make -C wireguard-linux-compat/src install && \
-#     make -C wireguard-tools/src -j$(nproc) && \
-#     make -C wireguard-tools/src install && \
-#     ls /lib/modules/$(uname -r)/extra/
+## WIREGUARD IS MERGED INTO KERNEL 5.6, ONLY RUN IF VERSION STARTS WITH 4 (WIN10)
+RUN [[ $(uname -r) == 4* ]] && \
+    cd /workspace && \
+    make -C wireguard-linux-compat/src -j$(nproc) && \
+    make -C wireguard-linux-compat/src install && \
+    make -C wireguard-tools/src -j$(nproc) && \
+    make -C wireguard-tools/src install && \
+    ls /lib/modules/$(uname -r)/extra/
 
 FROM wireguardkernel AS clustertools
 RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
